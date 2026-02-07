@@ -53,6 +53,7 @@ There are no known dependencies for Darwin.
 - Auto-paste
 - Excluded apps/windows
 - Bulk copy/output
+- Realtime UI updates
 - Portable (runs on any wayland/x11/darwin machine)
 - CLI operations
 
@@ -121,7 +122,7 @@ There are no known dependencies for Darwin.
   <summary><b>Installing with Go</b></summary>
 
   ```shell
-  go install github.com/savedra1/clipse@v1.2.0
+  go install github.com/savedra1/clipse@v1.2.1
   ```
 
 </details>
@@ -135,7 +136,7 @@ There are no known dependencies for Darwin.
   git clone https://github.com/savedra1/clipse
   cd clipse
   go mod tidy
-  make x11/darwin/wayland
+  make wayland # || make x11 || make darwin
   ```
 
   Once you have build the binary, you can install this to your executable path, E.g. `install -m 755 clipse /usr/bin || mv clipse /bin/`.
@@ -168,8 +169,8 @@ clipse -listen
 
   exec-once = clipse -listen # run listener on startup
 
-  windowrulev2 = float,class:(clipse) # ensure you have a floating window class set if you want this behavior
-  windowrulev2 = size 622 652,class:(clipse) # set the size of the window as necessary
+  windowrule = match:class clipse, float true # ensure you have a floating window class set if you want this behavior
+  windowrule = match:class clipse, size 622 652 # set the size of the window as necessary
 
   bind = SUPER, V, exec,  <terminal name> --class clipse -e 'clipse'
 
@@ -291,7 +292,7 @@ Your `configuration.json` file will initially be created with the following defa
         "more": "?",
         "nextPage": "right",
         "prevPage": "left",
-        "preview": " ",
+        "preview": "space",
         "quit": "esc",
         "remove": "backspace",
         "selectDown": "shift+down",
@@ -379,7 +380,17 @@ Absolute paths starting with `/`, paths relative to the user home dir using `~`,
 | `keyBindings.up`            | string | Moves selection up by one entry.            |
 | `keyBindings.yankFilter`    | string | Copies the current filter text.             |
 
+Key bindings can take multiple keys delimited by `,`.
 
+For example:
+
+```json
+{
+    "keyBindings": {
+        "quit": "q,esc"
+    }
+}
+```
 
 ## Image Display
 
@@ -569,7 +580,7 @@ Please see the following for what contribution suggestions. If you have an idea 
   - [x] ~~image preview display render type~~
 - [x] ~~Option to disable duplicate items~~
 - [x] ~~Multi-select feature for copying multiple items at once~~
-- [ ] Categorized pinned items with _potentially_ different tabs/views
+- [ ] Categorized pinned items with different tabs/views
 - [x] ~~System paste option _(building functionality to paste the chosen item directly into the next place of focus after the TUI closes)_~~
 - Packages for:
   - [ ] apt
@@ -577,7 +588,6 @@ Please see the following for what contribution suggestions. If you have an idea 
   - [ ] brew
   - [ ] other
 - [ ] Your custom theme for the [library](https://github.com/savedra1/clipse/blob/main/resources/library.md)
-- [ ] debug mode _(eg `clipse --debug` / debug file / system alert on panic)_
 - [x] TUI / theming enhancements:
   - [x] ~~Menu theme~~
   - [x] ~~Filter theme~~
