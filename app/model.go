@@ -95,6 +95,7 @@ func NewModel() Model {
 	del := m.newItemDelegate()
 
 	clipboardList := list.New(entryItems, del, 0, 0)
+	clipboardList.Filter = panicSafeFilter
 	clipboardList.KeyMap = defaultOverrides(config.ClipseConfig.KeyBindings)   // override default list keys with custom values
 	clipboardList.Title = clipboardTitle                                       // set hardcoded title
 	clipboardList.SetShowHelp(false)                                           // override with custom
@@ -127,7 +128,13 @@ func NewModel() Model {
 	return m
 }
 
-// if isPinned is true, returns only an array of pinned items, otherwise all
+func panicSafeFilter(term string, targets []string) []list.Rank {
+	defer func() {
+		recover()
+	}()
+	return list.DefaultFilter(term, targets)
+}
+
 func filterItems(clipboardItems []config.ClipboardItem, isPinned bool) []list.Item {
 	var filteredItems []list.Item
 
