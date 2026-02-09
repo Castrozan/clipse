@@ -33,8 +33,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Batch(cmds...)
 	case tea.WindowSizeMsg:
 		h, v := appStyle.GetFrameSize()
-		m.list.SetSize(msg.Width-h, msg.Height-v)
-		m.confirmationList.SetSize(msg.Width-h, msg.Height-v)
+		customHelpBarOffset := 2
+		m.list.SetSize(msg.Width-h, msg.Height-v-customHelpBarOffset)
+		m.confirmationList.SetSize(msg.Width-h, msg.Height-v-customHelpBarOffset)
 
 		headerHeight := lipgloss.Height(m.previewHeaderView())
 		footerHeight := lipgloss.Height(m.previewFooterView())
